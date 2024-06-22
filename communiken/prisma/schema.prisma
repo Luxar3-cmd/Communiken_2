@@ -27,8 +27,6 @@ model DireccionBloqueada {
   id                   Int                @id @default(autoincrement())
   usuario_id           Int
   direccion_bloqueada  String
-
-
   usuario              Usuario            @relation(fields: [usuario_id], references: [id])
 }
 
@@ -36,8 +34,6 @@ model DireccionFavorita {
   id                   Int                @id @default(autoincrement())
   usuario_id           Int
   direccion_favorita   String
-
-
   usuario              Usuario            @relation(fields: [usuario_id], references: [id])
 }
 
