@@ -33,6 +33,32 @@ app.post('/api/registrar', async({db , body}: { db:PrismaClient; body: any }) =>
         return { estado: 400, mensaje: 'Error al registrar el usuario', error: (error as Error).message};
     }
 });
+
+//Endpoint para para obtener la información del correo
+app.get('/api/informacion/:correo', async ({ db, params }: { db: PrismaClient; params: { correo: string } }) => {
+    try {
+        const usuario = await db.usuario.findUnique({
+            where: { correo: params.correo },
+            select: { nombre: true, correo: true, descripcion: true }
+        });
+
+        if (usuario) {
+            return {
+                estado: 200,
+                nombre: usuario.nombre,
+                correo: usuario.correo,
+                descripcion: usuario.descripcion
+            };
+        } else {
+            return { estado: 400, mensaje: 'Usuario no encontrado' };
+        }
+    } catch (error) {
+        // Manejo de errores
+        return { estado: 400, mensaje: 'Error al obtener información del usuario', error: (error as Error).message };
+    }
+});
+
+//Endpoint para bloquear
 app.post('/api/bloquear', async ({ db, body }: { db: PrismaClient; body: any }) => {
     try {
         const { correo, clave, correo_bloquear } = body;
