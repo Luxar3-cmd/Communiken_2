@@ -135,6 +135,48 @@ app.post('/api/marcarcorreo', async ({ db, body}: {db: PrismaClient; body: any})
     }
 });
 
+//Endpoint para demarcar un correo como favorito
+app.delete('/api/desmarcarcorreo', async ({ db, body }: { db: PrismaClient; body: any }) => {
+    try {
+        const { correo, clave, id_correo_favorito } = body;
+
+        // Validación simple de los datos recibidos
+        if (!correo || !clave || !id_correo_favorito) {
+            return { estado: 400, mensaje: 'Faltan campos obligatorios' };
+        }
+
+        // Encontrar al usuario que quiere desmarcar un correo como favorito
+        const usuario = await db.usuario.findUnique({ where: { correo } });
+
+        // Validar que el usuario exista y que la clave sea correcta
+        if (usuario && usuario.clave === clave) {
+            // Verificar si el ID del correo favorito existe en la base de datos y pertenece al usuario
+            const direccionFavorita = await db.direccionFavorita.findFirst({
+                where: {
+                    usuario_id: usuario.id,
+                    id: id_correo_favorito
+                }
+            });
+
+            if (direccionFavorita) {
+                // Eliminar la dirección favorita
+                await db.direccionFavorita.delete({
+                    where: {
+                        id: direccionFavorita.id
+                    }
+                });
+                return { estado: 200, mensaje: 'Correo desmarcado como favorito correctamente' };
+            } else {
+                return { estado: 400, mensaje: 'El ID del correo favorito no existe o no pertenece al usuario' };
+            }
+        } else {
+            return { estado: 400, mensaje: 'Credenciales incorrectas' };
+        }
+    } catch (error) {
+        // Manejo de errores
+        return { estado: 400, mensaje: 'Error al desmarcar correo como favorito', error: (error as Error).message };
+    }
+});
 
 
 
