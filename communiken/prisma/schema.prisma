@@ -13,8 +13,31 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model  User {
-  id Int @id @default(autoincrement())
-  email String @unique
-  name String?
+model Usuario {
+  id                        Int                @id @default(autoincrement())
+  nombre                    String
+  correo                    String             @unique
+  clave                     String
+  descripcion               String?
+  direccionesBloqueadas     DireccionBloqueada[]
+  direccionesFavoritas      DireccionFavorita[]
 }
+
+model DireccionBloqueada {
+  id                   Int                @id @default(autoincrement())
+  usuario_id           Int
+  direccion_bloqueada  String
+
+
+  usuario              Usuario            @relation(fields: [usuario_id], references: [id])
+}
+
+model DireccionFavorita {
+  id                   Int                @id @default(autoincrement())
+  usuario_id           Int
+  direccion_favorita   String
+
+
+  usuario              Usuario            @relation(fields: [usuario_id], references: [id])
+}
+
