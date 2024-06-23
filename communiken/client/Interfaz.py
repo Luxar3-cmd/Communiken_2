@@ -1,43 +1,47 @@
-import getpass #por poner color
+import getpass  # Para ocultar la entrada de la clave
 import requests
+
+BASE_URL = "http://localhost:8000/api"
 
 def iniciar_sesion():
     correo = input("Ingrese su correo electrónico: ")
     clave = getpass.getpass("Ingrese su clave: ")
 
-    #Aquí iría la lógica para verificar el correo y la clave con la base de datos.
     if verificar_credenciales(correo, clave):
         print("Inicio de sesión exitoso")
-        mostrar_menu()
+        mostrar_menu(correo, clave)
     else:
         print("Correo o clave incorrecta. Terminando la ejecución.")
         exit()
 
 def verificar_credenciales(correo, clave):
-    # Lógica para verificar las credenciales con la base de datos
-    # request para usar la forma de solicitud HTTP
-    return True
+    data = {
+        "correo": correo,
+        "clave": clave
+    }
+    response = requests.post(f"{BASE_URL}/algunendpoint", json=data)
+    if response.status_code == 200:
+        return True
+    else:
+        return False
 
-def mostrar_menu():
+def mostrar_menu(correo, clave):
     while True:
         print("\nMenú de Opciones:")
         print("1. Ver información de una dirección de correo electrónico")
         print("2. Ver correos marcados como favoritos")
         print("3. Marcar correo como favorito")
-        print("4. Desmarcar correo como favorito")
-        print("5. Terminar con la ejecución del cliente")
+        print("4. Terminar con la ejecución del cliente")
 
         opcion = input("Seleccione una opción: ")
 
         if opcion == "1":
             ver_informacion_correo()
         elif opcion == "2":
-            ver_correos_favoritos()
+            ver_correos_favoritos(correo, clave)
         elif opcion == "3":
-            marcar_correo_favorito()
+            marcar_correo_favorito(correo, clave)
         elif opcion == "4":
-            desmarcar_correo_favorito()
-        elif opcion == "5":
             print("Terminando la ejecución del cliente.")
             break
         else:
@@ -45,18 +49,34 @@ def mostrar_menu():
 
 def ver_informacion_correo():
     correo = input("Ingrese la dirección de correo: ")
-    # Lógica para ver la información del correo
+    response = requests.get(f"{BASE_URL}/informacion/{correo}")
 
-def ver_correos_favoritos():
-    # Lógica para ver correos favoritos
+    if response.status_code == 200:
+        datos = response.json()
+        print(f"Nombre: {datos['nombre']}")
+        print(f"Correo: {datos['correo']}")
+        print(f"Descripción: {datos['descripcion']}")
+    else:
+        print("Error al obtener la información del correo.")
 
-def marcar_correo_favorito():
-    correo_id = input("Ingrese el correo a marcar como favorito: ")
-    # Lógica para marcar el correo como favorito
+def ver_correos_favoritos(correo, clave):
+    # Aquí puedes implementar la lógica para ver correos favoritos si es necesario.
+    print("Esta funcionalidad no está implementada aún.")
 
-def desmarcar_correo_favorito():
-    correo_id = input("Ingrese el correo a desmarcar como favorito: ")
-    # Lógica para desmarcar el correo como favorito
+def marcar_correo_favorito(correo, clave):
+    id_correo_favorito = input("Ingrese el ID del correo a marcar como favorito: ")
+    data = {
+        "correo": correo,
+        "clave": clave,
+        "id_correo_favorito": int(id_correo_favorito)
+    }
+
+    response = requests.post(f"{BASE_URL}/marcarcorreo", json=data)
+
+    if response.status_code == 200:
+        print("Correo marcado como favorito correctamente.")
+    else:
+        print("Error al marcar el correo como favorito.")
 
 if __name__ == "__main__":
     iniciar_sesion()
