@@ -19,7 +19,7 @@ def verificar_credenciales(correo, clave):
         "correo": correo,
         "clave": clave
     }
-    response = requests.get(f"{BASE_URL}/algunendpoint", json=data)
+    response = requests.post(f"{BASE_URL}/verificar", json=data)
     if response.status_code == 200:
         return True
     else:
@@ -60,8 +60,19 @@ def ver_informacion_correo():
         print("Error al obtener la información del correo.")
 
 def ver_correos_favoritos(correo, clave):
-    # Aquí puedes implementar la lógica para ver correos favoritos si es necesario.
-    print("Esta funcionalidad no está implementada aún.")
+    headers = {
+        "correo": correo,
+        "clave": clave
+    }
+    response = requests.get(f"{BASE_URL}/favoritos/{correo}", headers=headers)
+    if response.status_code == 200:
+        datos = response.json()
+        favoritos = datos.get('favoritos', [])
+        print("Correos favoritos:")
+        for favorito in favoritos:
+            print(f"- {favorito}")
+    else:
+        print("Error al obtener los correos favoritos.")
 
 def marcar_correo_favorito(correo, clave):
     id_correo_favorito = input("Ingrese el ID del correo a marcar como favorito: ")
