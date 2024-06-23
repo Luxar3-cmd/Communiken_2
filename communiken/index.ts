@@ -179,6 +179,56 @@ app.delete('/api/desmarcarcorreo', async ({ db, body }: { db: PrismaClient; body
 });
 
 
+// Endpoint para verificar credenciales
+app.post('/api/verificar', async ({ db, body }: { db: PrismaClient; body: any }) => {
+    try {
+        const { correo, clave } = body;
+
+        // Validación simple de los datos recibidos
+        if (!correo || !clave) {
+            return { estado: 400};
+        }
+
+        // Encontrar al usuario y verificar la clave
+        const usuario = await db.usuario.findUnique({ where: { correo } });
+
+        if (usuario && usuario.clave === clave) {
+            return { estado: 200};
+        } else {
+            return { estado: 400};
+        }
+    } catch (error) {
+        // Manejo de errores
+        return { estado: 400, mensaje: 'Error al verificar credenciales', error: (error as Error).message };
+    }
+});
+
+// Endpoint para obtener correos favoritos
+app.get('/api/favoritos/:correo', async ({ db, params }: { db: PrismaClient; params: { correo: string } }) => {
+    try {
+        const { correo } = params;
+
+        // Encontrar al usuario
+        const usuario = await db.usuario.findUnique({ where: { correo } });
+
+        if (usuario) {
+            // Obtener correos favoritos del usuario
+            const favoritos = await db.direccionFavorita.findMany({
+                where: { usuario_id: usuario.id },
+                select: { direccion_favorita: true }
+            });
+
+            const favoritosList = favoritos.map(fav => fav.direccion_favorita);
+
+            return { estado: 200, favoritos: favoritosList };
+        } else {
+            return { estado: 400, mensaje: 'Usuario no encontrado' };
+        }
+    } catch (error) {
+        // Manejo de errores
+        return { estado: 400, mensaje: 'Error al obtener correos favoritos', error: (error as Error).message };
+    }
+});
 
 app.listen(8000);
 console.log(`🦊 Elysia is running at on port ${app.server?.port}...`);
