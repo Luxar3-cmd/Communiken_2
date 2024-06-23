@@ -7,6 +7,7 @@ def iniciar_sesion():
     correo = input("Ingrese su correo electrónico: ")
     clave = getpass.getpass("Ingrese su clave: ")
 
+
     if verificar_credenciales(correo, clave):
         print("Inicio de sesión exitoso")
         mostrar_menu(correo, clave)
@@ -21,8 +22,14 @@ def verificar_credenciales(correo, clave):
     }
     response = requests.post(f"{BASE_URL}/verificar", json=data)
     if response.status_code == 200:
-        return True
+        response_data = response.json()
+        if response_data.get('estado') == 200:
+            return True
+        else:
+            print(response_data.get('mensaje'))
+            return False
     else:
+        print("Error en la comunicación con el servidor.")
         return False
 
 def mostrar_menu(correo, clave):

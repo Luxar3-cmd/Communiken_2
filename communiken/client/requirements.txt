@@ -2,16 +2,33 @@ Instalar request en la terminal con el comando npm install request
 Funcionamiento de Interfaz.py y cosas que asumimos 
 1. en la funcion marcar_correo_favorito(correo, clave) Asumimos que el usuario sabe la id del correo que quiere marcar como favorito
 
-
-
-
-Pruebas de endpoit ya que no todos se pueden haceder desde la interfaz
+Pruebas de endpoints para los cuales la interfaz no implementa:
 - recomendable usar postman
 Prueba del endpoits registrar usuario
--
+Link: localhost:8000/api/registrar
+JSON: 
+{
+  "nombre": "MrRegister",
+  "correo": "Register@gmail.com",
+  "clave": "usm2024",
+  "descripcion": "Soy una descripcion!"
+}
 
-Prueba del endpoit bloquear usuario
--
+Prueba del endpoint bloquear usuario
+Link: localhost:8000/api/bloquear
+JSON: 
+{
+  "correo": "mail_bloqueante@gmail.com",
+  "clave": "usm2024",
+  "correo_bloquear": "mail_a_bloquear"
+}
+Prueba del endpoint Desmarcar como favorito un correo
+Indicaciones: Este endpoint verifica si el correo y la clave coinciden antes de marcar como favorito. Como se indicó, se asume que se conoce el id.
+Link: localhost:8000/api/desmarcarcorreo
+JSON: 
+{
+  "correo": "eduardo.morales@usm.cl",
+  "clave": "usm2023",
+  "id_correo_favorito": 2
+}
 
-Prueba del endpoit Desmarcar como favorito un correo
--
