@@ -1,0 +1,17 @@
+Instalar request en la terminal con el comando npm install request
+Funcionamiento de Interfaz.py y cosas que asumimos 
+1. en la funcion marcar_correo_favorito(correo, clave) Asumimos que el usuario sabe la id del correo que quiere marcar como favorito
+
+
+
+
+Pruebas de endpoit ya que no todos se pueden haceder desde la interfaz
+- recomendable usar postman
+Prueba del endpoits registrar usuario
+-
+
+Prueba del endpoit bloquear usuario
+-
+
+Prueba del endpoit Desmarcar como favorito un correo
+-

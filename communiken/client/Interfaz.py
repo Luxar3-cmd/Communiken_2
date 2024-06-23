@@ -19,7 +19,7 @@ def verificar_credenciales(correo, clave):
         "correo": correo,
         "clave": clave
     }
-    response = requests.post(f"{BASE_URL}/algunendpoint", json=data)
+    response = requests.get(f"{BASE_URL}/algunendpoint", json=data)
     if response.status_code == 200:
         return True
     else:

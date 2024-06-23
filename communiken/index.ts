@@ -11,7 +11,7 @@ const app = new Elysia()
     .decorate('db', prisma);
 
 
-//Registrar endpoint
+//Registrar usuario endpoint
 app.post('/api/registrar', async({db , body}: { db:PrismaClient; body: any }) => {
     try {
         const {nombre, correo, clave, descripcion} = body;
@@ -58,7 +58,7 @@ app.get('/api/informacion/:correo', async ({ db, params }: { db: PrismaClient; p
     }
 });
 
-//Endpoint para bloquear
+//Endpoint para bloquear usuario
 app.post('/api/bloquear', async ({ db, body }: { db: PrismaClient; body: any }) => {
     try {
         const { correo, clave, correo_bloquear } = body;
